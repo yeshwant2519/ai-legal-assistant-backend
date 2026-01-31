@@ -10,7 +10,16 @@ import numpy as np
 # ----------------------------
 # Load data
 # ----------------------------
-law_df = pd.read_csv("combined_law_data.csv")
+import os
+import urllib.request
+
+CSV_URL = "https://raw.githubusercontent.com/yeshwant2519/ai-legal-assistant-backend/main/combined_law_data.csv"
+CSV_PATH = "/tmp/combined_law_data.csv"
+
+if not os.path.exists(CSV_PATH):
+    urllib.request.urlretrieve(CSV_URL, CSV_PATH)
+
+law_df = pd.read_csv(CSV_PATH)
 
 # ----------------------------
 # NLP model
@@ -67,4 +76,5 @@ def ask_law(req: QuestionRequest):
         "results": results[
             ["law", "section", "title", "description", "punishment", "confidence"]
         ].to_dict(orient="records")
+
     }
